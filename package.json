@@ -1,0 +1,38 @@
+{
+  "name": "worldcup",
+  "version": "1.0.0",
+  "description": "foot ball game for HH",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --open --config webpack.development.js",
+    "build": "webpack --config webpack.distribution.js"
+  },
+  "keywords": [],
+  "author": "Yassine Dardour",
+  "license": "ISC",
+  "dependencies": {
+    "@pixi/particle-emitter": "^5.0.8",
+    "@types/bootstrap": "^5.2.6",
+    "@types/howler": "^2.2.7",
+    "@types/jquery": "^3.5.16",
+    "gsap": "^3.11.4",
+    "pixi.js": "^7.0.5"
+  },
+  "devDependencies": {
+    "bootstrap": "^5.2.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^10.0.0",
+    "howler": "^2.2.3",
+    "jquery": "^3.6.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.3",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git clone https://yassine_dardour@bitbucket.org/Blocktrip/penalty-frontend.git"
+  }
+}

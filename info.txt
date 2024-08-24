@@ -1,0 +1,3 @@
+12x12
+phrase -> words -> in diffrent places
+at the bottom, show words to find
