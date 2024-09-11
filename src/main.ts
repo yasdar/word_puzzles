@@ -52,11 +52,11 @@ $(function () {
 function startGame(Phrases:Array<string>){
   //calculate max row length
   //console.log('startGame Phrases',Phrases);
-  let _maxwordlength = 12;
-  Phrases.forEach((ph:string)=>{
+  //let _maxwordlength = game_data.maxRow;//12
+  /*Phrases.forEach((ph:string)=>{
     _maxwordlength = Math.max(ph.length,_maxwordlength+1);
-  })
-  game_data.maxRow = _maxwordlength;
+  })*/
+  //game_data.maxRow = _maxwordlength;
 
 
   //init
@@ -66,15 +66,18 @@ function startGame(Phrases:Array<string>){
   //get sentences
   arrangeLetters(Phrases);
   //find a place for each sentence
+  //sort by length , max length come first
+  game_data.sentences.sort((a:any, b:any) => b.length - a.length);
+  console.log('pppn',game_data.sentences);
+
   placeSentences();
   //fill empty tile randomly
   placeRandomLetters();
   //show words to reveal at the bottom
   showBottomWords();
 
+
  //make the parent iframe scrollable
-let _iframe:any =  parent.document.getElementsByTagName('iframe');
-if(_iframe){_iframe[0].setAttribute('scrolling','true');}
 }
 function init(){
   game_data.letters144 =Array.from(Array(144).keys())
@@ -98,24 +101,39 @@ function placeSentences(){
 function searchSolution(sentence:string,lookagain:number){
   //console.log('search Solution for' ,sentence); 
   const Func=[checkHorizental,checkVertical];//,checkDiangonal1,checkDiangonal2
-  shuffleArray(Func);
+  //shuffleArray(Func);
  // console.log(Func)
    //random line
-   let RandomLine:number = Math.floor(Math.random() * 11);
+   let RandomLine:number;
    //random From
-   let randomFrom:number = Math.floor(Math.random() * 11 );
+   let randomFrom:number;
+
   //random from
   let solution:boolean = false;
-  console.log(sentence,'RandomLine',RandomLine,'randomFrom',randomFrom)
-  if( Func[0](RandomLine,randomFrom,sentence).pass  ){
-    solution=true;
-    game_data.wordsInGame.push({sentence:sentence.toUpperCase(),direction:game_data.Direction});
-  }
-  else if(Func[1](RandomLine,randomFrom,sentence).pass ){
-    solution=true;
-    game_data.wordsInGame.push({sentence:sentence.toUpperCase(),direction:game_data.Direction});
-  }
 
+
+
+  if(sentence.length> 12){
+    randomFrom = 0;
+    RandomLine =  lookagain; //Math.floor(Math.random() * 11)
+
+    if(Func[1](RandomLine,randomFrom,sentence).pass ){
+      solution=true;
+      game_data.wordsInGame.push({sentence:sentence.toUpperCase(),direction:game_data.Direction});
+    }
+  }else{
+    randomFrom =  Math.floor(Math.random() * 11);
+    RandomLine =  lookagain;
+    if( Func[0](RandomLine,randomFrom,sentence).pass  ){
+    solution=true;
+    game_data.wordsInGame.push({sentence:sentence.toUpperCase(),direction:game_data.Direction});
+  }
+  }
+  
+ /*else if(Func[1](RandomLine,randomFrom,sentence).pass ){
+    solution=true;
+    game_data.wordsInGame.push({sentence:sentence.toUpperCase(),direction:game_data.Direction});
+  }*/
   
   
 
@@ -135,6 +153,7 @@ function searchSolution(sentence:string,lookagain:number){
       'line',RandomLine,
       'from',randomFrom);
   }else{
+    
      // console.log('no solution for' ,sentence);
       //try 20 times
       if(lookagain == 0){searchSolution(sentence,1);}
@@ -152,10 +171,8 @@ function searchSolution(sentence:string,lookagain:number){
       else if(lookagain == 12){searchSolution(sentence,13);}
       else if(lookagain == 13){searchSolution(sentence,14);}
       else if(lookagain == 14){searchSolution(sentence,15);}
-      else if(lookagain == 15){searchSolution(sentence,16);}
-      else if(lookagain == 16){searchSolution(sentence,17);}
-      else if(lookagain == 17){searchSolution(sentence,18);}
-      else if(lookagain == 18){searchSolution(sentence,19);}
+
+     
       else{
         console.log('%c ! end of repeat , no solution for ' +sentence, 'background: #222; color: #bada55');
 
@@ -278,8 +295,8 @@ function arrangeLetters(phrases:Array<string>){
   let sentences:Array<string>=[];
  
   phrases.forEach((p:string)=>{
- //get sentences without space
-   
+
+    //get sentences without space
     let sentence:string = p.replace(/\s/g, '');
     //remove dots
     sentence = sentence.replace(/\./g, '');
@@ -290,10 +307,10 @@ function arrangeLetters(phrases:Array<string>){
    
     
     if(sentence.length > game_data.maxRow){
-      //console.log('too long sentence',sentence.length,sentence)
+      console.log('too long sentence',sentence.length,sentence)
     }else{
       sentences.push(sentence);
-      //console.log('accepted',sentence,sentence.length)
+      console.log('accepted',sentence,sentence.length)
      //console.log('accepted media',game_data.Medias[index]);
     }
   });
@@ -302,7 +319,7 @@ function arrangeLetters(phrases:Array<string>){
   sentences = sentences.filter(onlyUnique);
   sentences.sort((a, b) => a.length - b.length);
  // console.log('0-->voila',sentences);
-
+shuffleArray(sentences);
   //keep only a given numbeer of words
   let maxWords:number =Number(GameData.data_Collection.config.replace('_MaxWords',''));
   console.log("maxWords : ",maxWords);
@@ -513,8 +530,8 @@ tiles.forEach((id:string)=>{
 }
 function removeLetters(){
   //remove tiles
-  for(let line:number = 0 ; line<12; line++){
-  for(let l:number = 0 ; l<game_data.maxRow; l++){
+  for(let line:number = 0 ; line<game_data.maxRow; line++){
+  for(let l:number = 0 ; l<12; l++){
   $("#"+l.toString()+'-'+line.toString()).remove();
 }
 }
@@ -619,11 +636,17 @@ function loadAudiosAddImages(found:any){
   game_data.imageCounter++;
 }
 function playAudioByid(id:string|undefined){
-  console.log('playAudioByid',id)
+  console.log('playAudioByid',id,game_data.CurrentAudios)
+
+  //$("#"+game_data.wordsInGame[index].id).find("p:first").css('background-color', "#ffff00");
+
   const _obj = game_data.CurrentAudios.find((obj:any) => {
     return obj.id === id;
   });
   if(_obj){ _obj.audio.play();}
+  else{
+    console.log('audio not found')
+  }
 }
 
 
@@ -695,7 +718,7 @@ function collectData(){
       "prefix":_Prefix
   };
  // console.log("GameData.data_Collection");
- //console.table(GameData.data_Collection);
+ console.table(GameData.data_Collection);
  
   let _path:string = _Json;
   let lastindex=_path.length;
@@ -716,7 +739,7 @@ $.getJSON(
    function( data:any ) {
   console.log('sucess data',data);
   GameData.data_Collection.data = data;
-  //console.log("GameData.data_Collection",GameData.data_Collection);
+  console.log("GameData.data_Collection",GameData.data_Collection);
 
   
   game_data.Phrases=[];

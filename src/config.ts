@@ -7,7 +7,6 @@ export const game_data:any={
   pinS:Howl,
   applause:Howl,
   letters144:Array<string>,
-  maxSentenceLength:12,
   sentences:Array<string>,
   usedID:Array<string>,
   //coloredWords:true,
@@ -29,7 +28,7 @@ export const game_data:any={
  wordTransformed:Array<any>,
  CurrentAudios:Array<any>,
  imageCounter:0,
-maxRow: 20
+  maxRow: 16
 }
 
 
@@ -58,21 +57,4 @@ export const removeDies = function (str:string){
 export const BreakDies = function (str:string){
   str = str.replace('#','\n');
   return str;
-}
-export const calculateQ  = function (totallength:number){
-  let N:number =2;
-  if(GameData.data_Collection.config.indexOf("_questions") != -1){
-  N = Number(GameData.data_Collection.config.replace("_questions",""));
-  }
-  else if(GameData.data_Collection.config == "Randomize"){
-    N = Math.round(Math.random()*(totallength));
-    if(N<2 || N>4){N=2;}
-  }
-  else if(GameData.data_Collection.config == "2-3-4"){
-    N = GameData.counter;
-    GameData.counter = GameData.counter+1;
-    if(N<2 || N>4){N=2;}
-  }
- 
-  return N;
 }

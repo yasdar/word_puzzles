@@ -35,7 +35,7 @@ body {
     font-family: Poppins;
     font-size: 4vh;
     font-weight: 700;
-    line-height: 0.95rem;
+    line-height: 2.95rem;
     letter-spacing: 0.03em;
     margin-left: 16px;
     margin-top: 1%;
@@ -74,9 +74,11 @@ body {
 @media (orientation: landscape) {
   #parentDiv{
     touch-action: none;
-    max-width: 40%;
-    margin-left: 30%;
+    max-width: 54%;
+    margin-left: 25%;
   }
+  /*max-width: 40%;
+    margin-left: 30%;*/
 }
   .panel{
     width:6vh;
