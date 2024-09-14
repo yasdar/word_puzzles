@@ -115,7 +115,7 @@ function searchSolution(sentence:string,lookagain:number){
 
   if(sentence.length> 12){
     randomFrom = 0;
-    RandomLine =  lookagain; //Math.floor(Math.random() * 11)
+    RandomLine =  Math.floor(Math.random() * 11)
 
     if(Func[1](RandomLine,randomFrom,sentence).pass ){
       solution=true;
